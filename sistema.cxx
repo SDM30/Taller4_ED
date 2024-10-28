@@ -53,13 +53,89 @@ void Sistema::cargarPersonas(std::string nombre_archivo, bool verbose) {
     }
 
     if (verbose) {
-        std::cout << std::endl << "Revisar estado del grafo al finalizar lectura" << std::endl;
-        std:: cout << "Numero de personas = " << gPersonas.cantVertices() << std::endl;
-        std::cout << "Recorrido plano = ";
-        gPersonas.plano();
-        std::cout << "Recorrido por profundidad (Desde Alice) = ";
-        gPersonas.DFS("Alice");
-        std::cout << "Recorrido por anchura (Desde Alice) = ";
-        gPersonas.BFS("Alice");
+        // std::cout << std::endl << "Revisar estado del grafo al finalizar lectura" << std::endl;
+        // std:: cout << "Numero de personas = " << gPersonas.cantVertices() << std::endl;
+        // std::cout << "Recorrido plano = ";
+        // gPersonas.plano();
+        // std::cout << "Recorrido por profundidad (Desde Alice) = ";
+        // gPersonas.DFS("Alice");
+        // std::cout << "Recorrido por anchura (Desde Alice) = ";
+        // gPersonas.BFS("Alice");
+        std::cout<< seisGrados("John", "Hannah", true) << std::endl;
+    }
+}
+
+bool Sistema::seisGrados(std::string p1, std::string p2, bool verbose) {
+    const int tam = gPersonas.cantVertices();
+    //Asegurarse que el grafo no este vacio
+    if (gPersonas.getVertices().empty()) {
+        std::cout << "No se han cargado personas, no es posible realizar la operacion" << std::endl;
+        return false;
+    }
+    
+    int pos_p1 = gPersonas.buscarVertice(p1);
+    if (pos_p1 == -1) {
+        std::cout << p1 << " no ha sido cargado en el sistema" << std::endl;
+        return false;
+    }
+
+    int pos_p2 = gPersonas.buscarVertice(p2);
+    if (pos_p2 == -1) {
+        std::cout << p2 << " no ha sido cargado en el sistema" << std::endl;
+        return false;
+    }
+    //Original
+    int **matriz_a = gPersonas.getAristasCpy();
+    //Accumula las potencias
+    int **matriz_a_k = gPersonas.getAristasCpy();
+
+    for (int potencia = 0; potencia < 6; potencia ++) {
+
+
+        if (matriz_a_k[pos_p1][pos_p2] > 0) {
+            liberarMatriz(matriz_a, tam);
+            liberarMatriz(matriz_a_k, tam);
+            return true;
+        } else {
+            //Multiplicación de matrices
+            int** matriz_aux = gPersonas.getAristasCpy();
+            for (int i = 0; i < tam; i++) {
+                for (int j = 0; j < tam; j++) {
+                    matriz_aux[i][j] = 0;
+
+                    for (int k = 0; k < tam; k++) {
+                        matriz_aux[i][j] += matriz_a[i][k] * matriz_a_k[k][j];
+                    }
+
+                    //Mostrar resultado de multiplicacion
+                    if (verbose && (j != tam - 1)) {
+                       std::cout << std::setw(5) << std::left << matriz_aux[i][j];
+                    }
+                }
+                //Salto de linea para siguente fila de la matriz
+                if (verbose && (i == tam - 1)) {
+                    std::cout<<std::endl; 
+                }
+            }
+            liberarMatriz(matriz_a_k, tam);
+            matriz_a_k = matriz_aux;
+        }
+
+        if (verbose) {
+            std::cout << std:: endl << std::endl;
+        }
+    }
+
+    liberarMatriz(matriz_a, tam);
+    liberarMatriz(matriz_a_k, tam);
+    return false;
+}
+
+void Sistema::liberarMatriz(int** matriz, int tam) {
+    if (matriz != NULL) {
+        for (int i = 0; i < tam; i++) {
+            delete[] matriz[i];
+        }
+        delete[] matriz;
     }
 }

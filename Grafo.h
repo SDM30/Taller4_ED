@@ -16,6 +16,7 @@ class Grafo {
         void setAristas (int** aristas);
         const std::vector<T>& getVertices() const;
         int** getAristas();
+        int** getAristasCpy();
         int cantVertices();
         int cantAristas();
         int buscarVertice(T ver);

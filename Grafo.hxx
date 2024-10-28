@@ -26,6 +26,23 @@ int** Grafo<T>::getAristas() {
 }
 
 template <class T>
+int** Grafo<T>::getAristasCpy() {
+    //Asignar memoria para las filas
+    int** aristasCopy = new int*[cantVertices()];
+
+    for (int i = 0; i < cantVertices(); ++i) {
+        //Asignar memoria para las columnas
+        aristasCopy[i] = new int[cantVertices()];
+        for (int j = 0; j < cantVertices(); ++j) {
+            //Copiar elementos
+            aristasCopy[i][j] = aristas[i][j];
+        }
+    }
+
+    return aristasCopy; 
+}
+
+template <class T>
 int Grafo<T>::cantVertices() {
     return vertices.size();
 }
