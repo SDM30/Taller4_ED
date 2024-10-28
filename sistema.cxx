@@ -84,7 +84,7 @@ bool Sistema::seisGrados(std::string p1, std::string p2, bool verbose) {
     const int tam = gPersonas.cantVertices();
     //Asegurarse que el grafo no este vacio
 
-    mostrarMatrizAdyacencia(gPersonas);
+    //mostrarMatrizAdyacencia(gPersonas);
 
     if (gPersonas.getVertices().empty()) {
         std::cout << "No se han cargado personas, no es posible realizar la operacion" << std::endl;
