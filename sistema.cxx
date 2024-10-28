@@ -182,6 +182,7 @@ void Sistema::probarSeisGrados(std::string nombre_archivo, bool verbose) {
 
     while (entrada >> numero_personas) {
         salida << numero_personas << std::endl;
+        if (verbose) std::cout << numero_personas << std::endl;
         for (int i = 0; i < numero_personas; i++) {
             entrada >> nombre_p1;
             entrada >> nombre_p2;
