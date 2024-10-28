@@ -11,6 +11,7 @@ int main(int argc, char *argv[]) {
     }
 
     control.cargarPersonas(argv[1], true);
+    control.probarSeisGrados(argv[2], true);
 
     return 0;
 }

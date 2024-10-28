@@ -53,20 +53,19 @@ void Sistema::cargarPersonas(std::string nombre_archivo, bool verbose) {
     }
 
     if (verbose) {
-        // std::cout << std::endl << "Revisar estado del grafo al finalizar lectura" << std::endl;
-        // std:: cout << "Numero de personas = " << gPersonas.cantVertices() << std::endl;
-        // std::cout << "Recorrido plano = ";
-        // gPersonas.plano();
-        // std::cout << "Recorrido por profundidad (Desde Alice) = ";
-        // gPersonas.DFS("Alice");
-        // std::cout << "Recorrido por anchura (Desde Alice) = ";
-        // gPersonas.BFS("Alice");
-        std::cout<< seisGrados("John", "Samuel", true) << std::endl;
+        std::cout << std::endl << "Revisar estado del grafo al finalizar lectura" << std::endl;
+        std:: cout << "Numero de personas = " << gPersonas.cantVertices() << std::endl;
+        std::cout << "Recorrido plano = ";
+        gPersonas.plano();
+        std::cout << "Recorrido por profundidad (Desde Alice) = ";
+        gPersonas.DFS("Alice");
+        std::cout << "Recorrido por anchura (Desde Alice) = ";
+        gPersonas.BFS("Alice");
+        std::cout << std::endl;
     }
 }
 
-template <class T>
-void mostrarMatrizAdyacencia(Grafo<T>& grafo) {
+void mostrarMatrizAdyacencia(Grafo<std::string>& grafo) {
     std::cout << "Matriz de Adyacencia:" << std::endl;
     int numVer = grafo.cantVertices();
     if (numVer == 0) {
@@ -85,7 +84,7 @@ bool Sistema::seisGrados(std::string p1, std::string p2, bool verbose) {
     const int tam = gPersonas.cantVertices();
     //Asegurarse que el grafo no este vacio
 
-    mostrarMatrizAdyacencia(gPersonas);
+    //mostrarMatrizAdyacencia(gPersonas);
 
     if (gPersonas.getVertices().empty()) {
         std::cout << "No se han cargado personas, no es posible realizar la operacion" << std::endl;
@@ -158,5 +157,43 @@ void Sistema::liberarMatriz(int** matriz, int tam) {
             delete[] matriz[i];
         }
         delete[] matriz;
+    }
+}
+
+void Sistema::probarSeisGrados(std::string nombre_archivo, bool verbose) {
+    std::ifstream entrada(nombre_archivo);
+    if (!entrada.is_open()){
+        printf("El archivo %s no existe o es ilegible\n", nombre_archivo.c_str());
+        return;        
+    }
+
+    if (entrada.peek() == EOF) {
+        std::cout << "El archivo " << nombre_archivo << " no existe o es ilegible"
+                << std::endl;
+        return;
+    }
+
+    //Datos persona
+    int numero_personas = 0;
+    std::string nombre_p1;
+    std::string nombre_p2;
+    std::string cumple;
+    std::ofstream salida(nombre_archivo + "_resultado");
+
+    while (entrada >> numero_personas) {
+        salida << numero_personas << std::endl;
+        for (int i = 0; i < numero_personas; i++) {
+            entrada >> nombre_p1;
+            entrada >> nombre_p2;
+            cumple = (seisGrados(nombre_p1, nombre_p2, false)) ? "Cumple" : "No Cumple";
+            salida << std::setw(10) << std::left << nombre_p1
+                   << std::setw(10) << nombre_p2
+                   << std::setw(10) << cumple << std::endl;
+            if (verbose) {
+                std::cout << std::setw(10) << std::left << nombre_p1
+                          << std::setw(10) << nombre_p2
+                          << std::setw(10) << cumple << std::endl;
+            }
+        }
     }
 }
