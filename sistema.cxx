@@ -65,7 +65,7 @@ void Sistema::cargarPersonas(std::string nombre_archivo, bool verbose) {
     }
 }
 
-void mostrarMatrizAdyacencia(Grafo<std::string>& grafo) {
+void Sistema::mostrarMatrizAdyacencia(Grafo<std::string>& grafo) {
     std::cout << "Matriz de Adyacencia:" << std::endl;
     int numVer = grafo.cantVertices();
     if (numVer == 0) {
@@ -84,7 +84,7 @@ bool Sistema::seisGrados(std::string p1, std::string p2, bool verbose) {
     const int tam = gPersonas.cantVertices();
     //Asegurarse que el grafo no este vacio
 
-    //mostrarMatrizAdyacencia(gPersonas);
+    mostrarMatrizAdyacencia(gPersonas);
 
     if (gPersonas.getVertices().empty()) {
         std::cout << "No se han cargado personas, no es posible realizar la operacion" << std::endl;
