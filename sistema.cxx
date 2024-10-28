@@ -61,13 +61,32 @@ void Sistema::cargarPersonas(std::string nombre_archivo, bool verbose) {
         // gPersonas.DFS("Alice");
         // std::cout << "Recorrido por anchura (Desde Alice) = ";
         // gPersonas.BFS("Alice");
-        std::cout<< seisGrados("John", "Hannah", true) << std::endl;
+        std::cout<< seisGrados("John", "Samuel", true) << std::endl;
+    }
+}
+
+template <class T>
+void mostrarMatrizAdyacencia(Grafo<T>& grafo) {
+    std::cout << "Matriz de Adyacencia:" << std::endl;
+    int numVer = grafo.cantVertices();
+    if (numVer == 0) {
+        std::cout << "La matriz está vacía." << std::endl;
+        return;
+    }
+    for (int i = 0; i < numVer; ++i) {
+        for (int j = 0; j < numVer; ++j) {
+            std::cout << grafo.getAristas()[i][j] << " "; // Asegúrate de que 'aristas' sea accesible.
+        }
+        std::cout << std::endl;
     }
 }
 
 bool Sistema::seisGrados(std::string p1, std::string p2, bool verbose) {
     const int tam = gPersonas.cantVertices();
     //Asegurarse que el grafo no este vacio
+
+    mostrarMatrizAdyacencia(gPersonas);
+
     if (gPersonas.getVertices().empty()) {
         std::cout << "No se han cargado personas, no es posible realizar la operacion" << std::endl;
         return false;
@@ -104,19 +123,21 @@ bool Sistema::seisGrados(std::string p1, std::string p2, bool verbose) {
                     matriz_aux[i][j] = 0;
 
                     for (int k = 0; k < tam; k++) {
-                        matriz_aux[i][j] += matriz_a[i][k] * matriz_a_k[k][j];
+                        matriz_aux[i][j] += matriz_a_k[i][k] * matriz_a[k][j];
                     }
 
                     //Mostrar resultado de multiplicacion
-                    if (verbose && (j != tam - 1)) {
+                    if (verbose) {
                        std::cout << std::setw(5) << std::left << matriz_aux[i][j];
                     }
                 }
+
                 //Salto de linea para siguente fila de la matriz
-                if (verbose && (i == tam - 1)) {
+                if (verbose) {
                     std::cout<<std::endl; 
                 }
             }
+
             liberarMatriz(matriz_a_k, tam);
             matriz_a_k = matriz_aux;
         }
