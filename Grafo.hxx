@@ -6,27 +6,27 @@ Grafo<T>::Grafo() {
 }
 
 template <class T>
-void Grafo<T>::setVertices(std::vector<T> vertices) {
+void Grafo<T>::fijarVertices(std::vector<T> vertices) {
     this->vertices = vertices;
 }
 
 template <class T>
-void Grafo<T>::setAristas (int** aristas) {
+void Grafo<T>::fijarAristas (int** aristas) {
     this->aristas = aristas;
 }
 
 template <class T>
-const std::vector<T>& Grafo<T>::getVertices() const {
+const std::vector<T>& Grafo<T>::obtenerVertices() const {
     return this->vertices;
 }
 
 template <class T>
-int** Grafo<T>::getAristas() {
+int** Grafo<T>::obtenerAristas() {
     return this->aristas;
 }
 
 template <class T>
-int** Grafo<T>::getAristasCpy() {
+int** Grafo<T>::obtenerAristasCpy() {
     //Asignar memoria para las filas
     int** aristasCopy = new int*[cantVertices()];
 

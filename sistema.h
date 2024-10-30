@@ -15,7 +15,6 @@ class Sistema {
     public:
         Grafo<std::string> getPersonas();
         void cargarPersonas(std::string nombre_archivo, bool verbose);
-        void mostrarMatrizAdyacencia(Grafo<std::string>& grafo);
         void sumarMatrices(int** matriz1, int** matriz2);
         void calcularMatrizCaminos(bool verbose);
         bool seisGrados(std::string p1, std::string p2);

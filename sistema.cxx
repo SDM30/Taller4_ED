@@ -75,36 +75,21 @@ void Sistema::sumarMatrices(int** matriz1, int** matriz2) {
     }
 }
 
-void Sistema::mostrarMatrizAdyacencia(Grafo<std::string>& grafo) {
-    std::cout << "Matriz de Adyacencia:" << std::endl;
-    int numVer = grafo.cantVertices();
-    if (numVer == 0) {
-        std::cout << "La matriz está vacía." << std::endl;
-        return;
-    }
-    for (int i = 0; i < numVer; ++i) {
-        for (int j = 0; j < numVer; ++j) {
-            std::cout << grafo.getAristas()[i][j] << " "; // Asegúrate de que 'aristas' sea accesible.
-        }
-        std::cout << std::endl;
-    }
-}
-
 void Sistema::calcularMatrizCaminos(bool verbose) {
     const int tam = gPersonas.cantVertices();
     //Original
-    int **matriz_a = gPersonas.getAristasCpy();
+    int **matriz_a = gPersonas.obtenerAristasCpy();
     //Accumula las potencias
-    int **matriz_a_k = gPersonas.getAristasCpy();
+    int **matriz_a_k = gPersonas.obtenerAristasCpy();
 
-    matriz_caminos = gPersonas.getAristasCpy();
+    matriz_caminos = gPersonas.obtenerAristasCpy();
     
     for (int i = 0; i < 6; i++) {
         //Sumar a la matriz de caminos
         sumarMatrices(matriz_caminos, matriz_a_k);
 
         //Multiplicación de matrices
-        int** matriz_aux = gPersonas.getAristasCpy();
+        int** matriz_aux = gPersonas.obtenerAristasCpy();
         for (int i = 0; i < tam; i++) {
             for (int j = 0; j < tam; j++) {
                 matriz_aux[i][j] = 0;
@@ -134,7 +119,7 @@ void Sistema::calcularMatrizCaminos(bool verbose) {
     }
 
     //Inicializar matriz de identidad
-    int **matriz_iden = gPersonas.getAristasCpy();
+    int **matriz_iden = gPersonas.obtenerAristasCpy();
     for (int i = 0; i < tam; i++) {
         for (int j = 0; j < tam; j++) {
             matriz_iden[i][j] = 0;
@@ -172,7 +157,7 @@ void Sistema::calcularMatrizCaminos(bool verbose) {
 bool Sistema::seisGrados(std::string p1, std::string p2) {
     const int tam = gPersonas.cantVertices();
 
-    if (gPersonas.getVertices().empty()) {
+    if (gPersonas.obtenerVertices().empty()) {
         std::cout << "No se han cargado personas, no es posible realizar la operacion" << std::endl;
         return false;
     }
