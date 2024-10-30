@@ -65,6 +65,16 @@ void Sistema::cargarPersonas(std::string nombre_archivo, bool verbose) {
     }
 }
 
+void Sistema::sumarMatrices(int** matriz1, int** matriz2) {
+    // matriz1 almacena el resultado
+    const int tam = gPersonas.cantVertices();
+    for (int i = 0; i < tam; i++) {
+        for (int j = 0; j < tam; j++) {
+            matriz1[i][j] += matriz2[i][j];
+        }
+    }
+}
+
 void Sistema::mostrarMatrizAdyacencia(Grafo<std::string>& grafo) {
     std::cout << "Matriz de Adyacencia:" << std::endl;
     int numVer = grafo.cantVertices();
@@ -80,11 +90,87 @@ void Sistema::mostrarMatrizAdyacencia(Grafo<std::string>& grafo) {
     }
 }
 
-bool Sistema::seisGrados(std::string p1, std::string p2, bool verbose) {
+void Sistema::calcularMatrizCaminos(bool verbose) {
     const int tam = gPersonas.cantVertices();
-    //Asegurarse que el grafo no este vacio
+    //Original
+    int **matriz_a = gPersonas.getAristasCpy();
+    //Accumula las potencias
+    int **matriz_a_k = gPersonas.getAristasCpy();
 
-    //mostrarMatrizAdyacencia(gPersonas);
+    matriz_caminos = gPersonas.getAristasCpy();
+    
+    for (int i = 0; i < 6; i++) {
+        //Sumar a la matriz de caminos
+        sumarMatrices(matriz_caminos, matriz_a_k);
+
+        //Multiplicación de matrices
+        int** matriz_aux = gPersonas.getAristasCpy();
+        for (int i = 0; i < tam; i++) {
+            for (int j = 0; j < tam; j++) {
+                matriz_aux[i][j] = 0;
+
+                for (int k = 0; k < tam; k++) {
+                    matriz_aux[i][j] += matriz_a_k[i][k] * matriz_a[k][j];
+                }
+
+                //Mostrar resultado de multiplicacion
+                if (verbose) {
+                    std::cout << std::setw(5) << std::left << matriz_aux[i][j];
+                }
+            }
+            //Salto de linea para siguente fila de la matriz
+            if (verbose) {
+                std::cout<<std::endl; 
+            }
+        }
+
+        //Salto de linea para siguente fila de la matriz
+        if (verbose) {
+            std::cout<<std::endl; 
+        }
+
+        liberarMatriz(matriz_a_k, tam);
+        matriz_a_k = matriz_aux;
+    }
+
+    //Inicializar matriz de identidad
+    int **matriz_iden = gPersonas.getAristasCpy();
+    for (int i = 0; i < tam; i++) {
+        for (int j = 0; j < tam; j++) {
+            matriz_iden[i][j] = 0;
+            if (i == j) {
+                matriz_iden[i][j] = 1;
+            }
+        }
+    }
+
+    liberarMatriz(matriz_a, tam);
+    liberarMatriz(matriz_a_k, tam);
+
+    sumarMatrices(matriz_caminos, matriz_iden);
+
+    //Reemplazar valores > 0 por 1
+    for (int i = 0; i < tam; i++) {
+        for (int j = 0; j < tam; j++) {
+            if (matriz_caminos[i][j] > 0) {
+                matriz_caminos[i][j] = 1;
+            }
+
+            if (verbose) {
+                std::cout << matriz_caminos[i][j] << " ";
+            }
+        }
+
+        if (verbose) {
+            std::cout << std::endl;
+        }
+    }
+
+    liberarMatriz(matriz_iden, tam);
+}
+
+bool Sistema::seisGrados(std::string p1, std::string p2) {
+    const int tam = gPersonas.cantVertices();
 
     if (gPersonas.getVertices().empty()) {
         std::cout << "No se han cargado personas, no es posible realizar la operacion" << std::endl;
@@ -102,52 +188,11 @@ bool Sistema::seisGrados(std::string p1, std::string p2, bool verbose) {
         std::cout << p2 << " no ha sido cargado en el sistema" << std::endl;
         return false;
     }
-    //Original
-    int **matriz_a = gPersonas.getAristasCpy();
-    //Accumula las potencias
-    int **matriz_a_k = gPersonas.getAristasCpy();
 
-    for (int potencia = 0; potencia < 6; potencia ++) {
-
-
-        if (matriz_a_k[pos_p1][pos_p2] > 0) {
-            liberarMatriz(matriz_a, tam);
-            liberarMatriz(matriz_a_k, tam);
-            return true;
-        } else {
-            //Multiplicación de matrices
-            int** matriz_aux = gPersonas.getAristasCpy();
-            for (int i = 0; i < tam; i++) {
-                for (int j = 0; j < tam; j++) {
-                    matriz_aux[i][j] = 0;
-
-                    for (int k = 0; k < tam; k++) {
-                        matriz_aux[i][j] += matriz_a_k[i][k] * matriz_a[k][j];
-                    }
-
-                    //Mostrar resultado de multiplicacion
-                    if (verbose) {
-                       std::cout << std::setw(5) << std::left << matriz_aux[i][j];
-                    }
-                }
-
-                //Salto de linea para siguente fila de la matriz
-                if (verbose) {
-                    std::cout<<std::endl; 
-                }
-            }
-
-            liberarMatriz(matriz_a_k, tam);
-            matriz_a_k = matriz_aux;
-        }
-
-        if (verbose) {
-            std::cout << std:: endl << std::endl;
-        }
+    if (matriz_caminos[pos_p1][pos_p2] > 0) {
+        return true;
     }
 
-    liberarMatriz(matriz_a, tam);
-    liberarMatriz(matriz_a_k, tam);
     return false;
 }
 
@@ -161,6 +206,7 @@ void Sistema::liberarMatriz(int** matriz, int tam) {
 }
 
 void Sistema::probarSeisGrados(std::string nombre_archivo, bool verbose) {
+    calcularMatrizCaminos(true);
     std::ifstream entrada(nombre_archivo);
     if (!entrada.is_open()){
         printf("El archivo %s no existe o es ilegible\n", nombre_archivo.c_str());
@@ -178,7 +224,10 @@ void Sistema::probarSeisGrados(std::string nombre_archivo, bool verbose) {
     std::string nombre_p1;
     std::string nombre_p2;
     std::string cumple;
-    std::ofstream salida(nombre_archivo + "_resultado");
+
+    //Eliminar extension del archivo
+    int pos_punto = nombre_archivo.find_last_of(".");
+    std::ofstream salida(nombre_archivo.substr(0,pos_punto) + "_resultado.txt");
 
     while (entrada >> numero_personas) {
         salida << numero_personas << std::endl;
@@ -186,7 +235,7 @@ void Sistema::probarSeisGrados(std::string nombre_archivo, bool verbose) {
         for (int i = 0; i < numero_personas; i++) {
             entrada >> nombre_p1;
             entrada >> nombre_p2;
-            cumple = (seisGrados(nombre_p1, nombre_p2, false)) ? "Cumple" : "No Cumple";
+            cumple = (seisGrados(nombre_p1, nombre_p2)) ? "Cumple" : "No Cumple";
             salida << std::setw(10) << std::left << nombre_p1
                    << std::setw(10) << nombre_p2
                    << std::setw(10) << cumple << std::endl;
