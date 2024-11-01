@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <sstream>
 #include "Grafo.h" 
 
 class Sistema {
@@ -13,7 +14,6 @@ class Sistema {
         int** matriz_caminos;
 
     public:
-        Grafo<std::string> getPersonas();
         void cargarPersonas(std::string nombre_archivo, bool verbose);
         void sumarMatrices(int** matriz1, int** matriz2);
         void calcularMatrizCaminos(bool verbose);

@@ -1,13 +1,3 @@
-12
-John Alice
-John Bob
-Alice Carol
-Bob Dave
-Carol Eve
-Dave Frank
-Eve Grace
-Frank Hannah
-Grace Ian
-Hannah John
-Ian Simon
+2
 Simon Samuel
+Simon Sebastian
