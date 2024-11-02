@@ -45,6 +45,7 @@ void Sistema::cargarPersonas(std::string nombre_archivo, bool verbose) {
             }
 
             if (verbose) {
+                std::cout << "Numero personas = " << i << std::endl;
                 std::cout << std::endl << "Ingresando al Grafo: " << nombre_p1;
                 if (!nombre_p2.empty()) {
                     std::cout << " - " << nombre_p2;
@@ -70,6 +71,14 @@ void Sistema::cargarPersonas(std::string nombre_archivo, bool verbose) {
         std::cout << "Recorrido por anchura (Desde Primer Vertice) = ";
         gPersonas.BFS(gPersonas.obtenerVertices()[0]);
         std::cout << std::endl;
+        std::cout << "Matriz de adyacencia = " << std::endl;
+        for (int i = 0; i < gPersonas.cantVertices(); i++) {
+            for (int j = 0; j < gPersonas.cantVertices(); j++) {
+                std::cout << gPersonas.obtenerAristas()[i][j] << " ";
+            }
+            std::cout << std::endl;
+        }
+        std::cout << std::endl;
     }
 }
 
@@ -92,7 +101,7 @@ void Sistema::calcularMatrizCaminos(bool verbose) {
 
     matriz_caminos = gPersonas.obtenerAristasCpy();
     
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 5; i++) {
         //Sumar a la matriz de caminos
         sumarMatrices(matriz_caminos, matriz_a_k);
 
