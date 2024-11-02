@@ -134,6 +134,7 @@ void Sistema::calcularMatrizCaminos(bool verbose) {
         liberarMatriz(matriz_a_k, tam);
         matriz_a_k = matriz_aux;
     }
+    sumarMatrices(matriz_caminos, matriz_a_k);
 
     //Inicializar matriz de identidad
     int **matriz_iden = gPersonas.obtenerAristasCpy();
