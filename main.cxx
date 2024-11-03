@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
     control.cargarPersonas(argv[1], true);
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    std::cout << "Tiempo de ejecucion de carga: " << duration.count() << " microsegundos" << std::endl
+    std::cout << "Tiempo de ejecucion de carga: " << duration.count() << " microsegundos" << std::endl;
 
     auto start_seis_grados = std::chrono::high_resolution_clock::now();
     control.probarSeisGrados(argv[2], true);
